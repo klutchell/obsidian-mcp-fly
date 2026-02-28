@@ -1,0 +1,32 @@
+app = 'your-app-name'
+primary_region = 'ewr'
+
+[build]
+
+[env]
+  ENABLE_SYNC = 'false'
+  ENABLE_MCP = 'true'
+  OBSIDIAN_SYNC_DIR = '/data/vault'
+  ENVIRONMENT = 'production'
+
+[http_service]
+  internal_port = 8090
+  force_https = true
+  auto_stop_machines = 'suspend'
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '5s'
+    grace_period = '30s'
+    method = 'GET'
+    path = '/.well-known/oauth-protected-resource'
+
+[[vm]]
+  size = 'shared-cpu-1x'
+  memory = '512mb'
+
+[mounts]
+  source = 'obsidian_data'
+  destination = '/data'

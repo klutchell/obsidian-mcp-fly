@@ -1,0 +1,41 @@
+services:
+  obsidian-mcp:
+    build: .
+    environment:
+      ENABLE_SYNC: "false"
+      ENABLE_MCP: "true"
+      OBSIDIAN_SYNC_DIR: /data/vault
+      MCP_SERVER_URL: http://obsidian-mcp:8090
+      MCP_AUTH_USERS: test:test
+    volumes:
+      - data:/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:8090/.well-known/oauth-protected-resource').then(r=>{if(!r.ok)throw r.status;process.exit(0)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  sut:
+    image: curlimages/curl:latest
+    depends_on:
+      obsidian-mcp:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        echo "=== OAuth Protected Resource ==="
+        curl -sf http://obsidian-mcp:8090/.well-known/oauth-protected-resource
+        echo
+        echo "=== OAuth Authorization Server ==="
+        curl -sf http://obsidian-mcp:8090/.well-known/oauth-authorization-server
+        echo
+        echo "=== MCP endpoint (expect 401 unauthenticated) ==="
+        code=$$(curl -so /dev/null -w '%{http_code}' http://obsidian-mcp:8090/mcp) || true
+        echo "HTTP $$code"
+        [ "$$code" = "401" ] || { echo "FAIL: expected 401, got $$code"; exit 1; }
+        echo
+        echo "ALL CHECKS PASSED"
+
+volumes:
+  data:

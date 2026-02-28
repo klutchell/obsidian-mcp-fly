@@ -1,0 +1,11 @@
+{
+  "name": "obsidian-headless-wrapper",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "ob": "node_modules/obsidian-headless/cli.js"
+  },
+  "dependencies": {
+    "obsidian-headless": "^0.0.3"
+  }
+}
