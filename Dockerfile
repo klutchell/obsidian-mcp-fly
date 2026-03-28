@@ -2,7 +2,7 @@
 FROM golang:1.25-bookworm AS builder
 
 # renovate: datasource=github-tags depName=alexjbarnes/vault-sync
-ARG VAULT_SYNC_VERSION=v1.1.0
+ARG VAULT_SYNC_VERSION=v1.3.0
 
 RUN git clone --depth 1 --branch "${VAULT_SYNC_VERSION}" \
         https://github.com/alexjbarnes/vault-sync.git /src
