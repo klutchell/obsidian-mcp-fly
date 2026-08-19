@@ -1,5 +1,5 @@
 # Stage 1: Build vault-sync from source
-FROM golang:1.25-bookworm AS builder
+FROM golang:1.27-bookworm@sha256:eb37f58646a901dc7727cf448cae36daaefaba79de33b5058dab79aa4c04aefb AS builder
 
 # renovate: datasource=github-tags depName=alexjbarnes/vault-sync
 ARG VAULT_SYNC_VERSION=v1.1.0
