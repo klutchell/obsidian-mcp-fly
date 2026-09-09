@@ -1,5 +1,5 @@
 # Stage 1: Build vault-sync from source
-FROM golang:1.25-bookworm AS builder
+FROM golang:1.25-bookworm@sha256:3b4a11519ad929d1e1d261a12cff056f0c85b735253d7d861346b9c6f8b36437 AS builder
 
 # renovate: datasource=github-tags depName=alexjbarnes/vault-sync
 ARG VAULT_SYNC_VERSION=v1.1.0
@@ -14,7 +14,7 @@ RUN CGO_ENABLED=0 go build \
         -o /vault-sync ./cmd/vault-sync
 
 # Stage 2: Runtime
-FROM node:24-bookworm-slim
+FROM node:24-bookworm-slim@sha256:2fe369e969550cde8e867afc3fe370b260140cab4a23d467074295b42163d553
 
 # hadolint ignore=DL3008
 RUN apt-get update \
